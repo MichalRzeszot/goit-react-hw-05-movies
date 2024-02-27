@@ -1,16 +1,38 @@
-export const App = () => {
+import './App.css';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+
+const Home = lazy(() => import('./Home'));
+const Movies = lazy(() => import('./Movies'));
+const MovieDetails = lazy(() => import('./MovieDetails'));
+
+const Cast = lazy(() => import('./cast'));
+const Reviews = lazy(() => import('./reviews'));
+
+function App() {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <BrowserRouter>
+        <header className="header">
+          <nav className="nav">
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/movies">Movies</NavLink>
+          </nav>
+        </header>
+        <Suspense fallback={<div>Loading... </div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/movies/:movieId/*" element={<MovieDetails />}>
+              <Route path="cast" element={<Cast />} />
+              <Route path="reviews" element={<Reviews />} />
+            </Route>
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </>
   );
-};
+}
+
+export default App;

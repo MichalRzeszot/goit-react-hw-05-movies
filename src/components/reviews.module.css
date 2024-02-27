@@ -1,0 +1,39 @@
+.reviewsContainer {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.loading,
+.error {
+  color: #ff6b6b;
+  font-size: 18px;
+  text-align: center;
+}
+
+.reviewsList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.reviewItem {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.author {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.content {
+  font-size: 16px;
+  color: #666;
+  white-space: pre-line;
+}
+
+.noReviews {
+  text-align: center;
+  font-size: 18px;
+}

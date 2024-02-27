@@ -1,0 +1,33 @@
+.homeContainer {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.trendingHeader {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.moviesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.movieItem {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.movieLink {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.movieLink:hover {
+  text-decoration: underline;
+}
