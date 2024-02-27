@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useFetch from './hooks/useFetch';
 import { Link } from 'react-router-dom';
-
+import css from './searchbar.module.css';
 const SearchBar = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
