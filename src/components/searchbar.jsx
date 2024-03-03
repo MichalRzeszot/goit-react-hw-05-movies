@@ -1,17 +1,34 @@
-import { useState } from 'react';
-import useFetch from './hooks/useFetch';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchMoviesByQuery } from './movieApi';
 import css from './searchbar.module.css';
+
 const SearchBar = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
-  const [search, setSearch] = useState('');
-  const { data, loading, error } = useFetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=492aa469db167d08ffbb05ac7fdafe78&query=${search}`
-  );
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchMoviesByQuery(query);
+        setMovies(response.data.results);
+        setLoading(false);
+      } catch (error) {
+        setError('Failed to fetch movies');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [query]);
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSearch(query);
     onSubmit(query);
   };
 
@@ -31,22 +48,21 @@ const SearchBar = ({ onSubmit }) => {
           value={query}
           onChange={handleInputChange}
           className={css.input}
+          placeholder="Search for movies..."
         />
       </form>
       {error && <div>{error}</div>}
-
       {loading && <div>Loading...</div>}
-      {data && (
-        <ul className={css.resultsList}>
-          {data.results.map(movie => (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`}>
-                {movie.title} ({movie.release_date.split('-')[0]})
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className={css.resultsList}>
+        {movies.map(movie => (
+          <li key={movie.id}>
+            <Link to={`/movies/${movie.id}`}>
+              {movie.title} (
+              {movie.release_date ? movie.release_date.split('-')[0] : 'N/A'})
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

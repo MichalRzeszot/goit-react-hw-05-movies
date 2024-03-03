@@ -1,19 +1,39 @@
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useFetch from 'hooks/useFetch';
 import styles from './reviews.module.css';
+import { fetchMovieReviews } from './movieApi';
 
 const Reviews = () => {
   const { movieId } = useParams();
-  const url = `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=492aa469db167d08ffbb05ac7fdafe78`;
-  const { data, isLoading, error } = useFetch(url);
+  const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetchMovieReviews(movieId);
+        setReviews(response.data.results);
+      } catch (error) {
+        setError(error);
+        console.error('Error fetching reviews:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [movieId]);
 
   return (
     <div className={styles.reviewsContainer}>
       {error && <div className={styles.error}>{error.message}</div>}
       {isLoading && <div className={styles.loading}>Loading...</div>}
-      {data && data.results.length > 0 ? (
+      {reviews && reviews.length > 0 ? (
         <ul className={styles.reviewsList}>
-          {data.results.map(review => (
+          {reviews.map(review => (
             <li key={review.id} className={styles.reviewItem}>
               <h3 className={styles.author}>{review.author}</h3>
               <p className={styles.content}>{review.content}</p>

@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styles from './home.module.css';
+import { fetchTrendingMovies } from './movieApi';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(
-        'https://api.themoviedb.org/3/trending/movie/day?api_key=492aa469db167d08ffbb05ac7fdafe78'
-      )
-      .then(response => setMovies(response.data.results))
-      .catch(error => console.log(error));
+    const fetchData = async () => {
+      try {
+        const response = await fetchTrendingMovies();
+        setMovies(response.data.results);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (

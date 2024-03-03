@@ -12,7 +12,7 @@ const Reviews = lazy(() => import('./reviews'));
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/goit-react-hw-05-movies">
         <header className="header">
           <nav className="nav">
             <NavLink to="/">Home</NavLink>

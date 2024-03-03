@@ -1,46 +1,49 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import styles from './Movies.module.css';
+import { Link } from 'react-router-dom';
+import { fetchMoviesByQuery } from './movieApi';
+import css from './Movies.module.css';
 
 const Movies = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
 
   const handleChange = e => {
     setQuery(e.target.value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?api_key=492aa469db167d08ffbb05ac7fdafe78&query=${query}`
-      )
-      .then(response => {
-        setMovies(response.data.results);
-      })
-      .catch(error => console.log(error));
+    setError(null);
+    try {
+      const response = await fetchMoviesByQuery(query);
+      setMovies(response.data.results);
+    } catch (error) {
+      setError(error);
+      console.error('Error fetching movies:', error);
+    }
     setQuery('');
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className={styles.searchForm}>
+      <form onSubmit={handleSubmit} className={css.searchForm}>
         <input
           type="text"
           value={query}
           onChange={handleChange}
           placeholder="Search movies"
-          className={styles.searchInput}
+          className={css.searchInput}
         />
-        <button type="submit" className={styles.searchButton}>
+        <button type="submit" className={css.searchButton}>
           Search
         </button>
       </form>
-      <ul className={styles.moviesList}>
+      {error && <div className={css.errorMessage}>Error: {error.message}</div>}
+      <ul className={css.moviesList}>
         {movies.map(movie => (
-          <li key={movie.id} className={styles.movieItem}>
-            {movie.title}
+          <li key={movie.id} className={css.movieItem}>
+            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
           </li>
         ))}
       </ul>
